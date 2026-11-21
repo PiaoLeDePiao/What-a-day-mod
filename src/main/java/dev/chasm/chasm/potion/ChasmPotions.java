@@ -35,8 +35,8 @@ public class ChasmPotions {
         event.enqueueWork(() -> {
             if (!ChasmConfig.ENABLE_POTION.get())
                 return;
-            PotionBrewing.addMix(Potions.SLOW_FALLING, Items.PHANTOM_MEMBRANE, FLIGHT.get());
-            PotionBrewing.addMix(FLIGHT.get(), Items.REDSTONE, FLIGHT_LONG.get());
+            PotionBrewing.addMix(Potions.SLOW_FALLING, Items.PHANTOM_MEMBRANE, FLIGHT.getDelegate());
+            PotionBrewing.addMix(FLIGHT.getDelegate(), Items.REDSTONE, FLIGHT_LONG.getDelegate());
         });
     }
 }

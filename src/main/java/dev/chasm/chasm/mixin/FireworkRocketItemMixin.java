@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FireworkRocketItem.class)
 public class FireworkRocketItemMixin {
 
-    @Inject(method = "getItemEnchantability", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getEnchantmentValue", at = @At("HEAD"), cancellable = true)
     private void chasm$makeFireworksEnchantable(CallbackInfoReturnable<Integer> cir) {
         if (ChasmConfig.ENABLE_FIREWORKS.get()) {
             cir.setReturnValue(1);

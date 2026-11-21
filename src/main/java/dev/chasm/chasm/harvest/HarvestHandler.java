@@ -48,6 +48,6 @@ public final class HarvestHandler {
                                 ChasmConfig.HARVEST_DIAMOND_CHANCE.get().floatValue())))
                 .add(LootItem.lootTableItem(Items.NETHERITE_INGOT)
                         .when(LootItemRandomChanceCondition.randomChance(
-                                ChasmConfig.HARVEST_NETHERITE_CHANCE.get().floatValue())));
+                                ChasmConfig.HARVEST_NETHERITE_CHANCE.get().floatValue()))).build();
     }
 }

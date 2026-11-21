@@ -6,9 +6,7 @@ import dev.chasm.chasm.ChasmConfig;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -35,7 +33,6 @@ public class ChasmStructures {
 
     public static final DeferredHolder<StructureType<?>, StructureType<SinkholeStructure>> SINKHOLE_TYPE =
         STRUCTURE_TYPES.register("sinkhole", () -> new StructureType<>() {
-            @Override
             public String getSerializedName() {
                 return "chasm:sinkhole";
             }
@@ -63,8 +60,6 @@ public class ChasmStructures {
                 RandomSpreadType.LINEAR, 1526052012)));
 
     private static HolderSet<Biome> allOverworldBiomes() {
-        return BuiltInRegistries.BIOME.getTag(BiomeTags.IS_OVERWORLD)
-            .map(hs -> (HolderSet<Biome>) hs)
-            .orElseGet(() -> HolderSet.direct());
+        return HolderSet.direct(); // 空集合 = 不限制群系，具体群系由生成点检查控制
     }
 }

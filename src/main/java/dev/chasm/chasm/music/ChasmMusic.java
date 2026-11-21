@@ -14,7 +14,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.event.tick.TickEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 
 /**
  * FR-5：本地 mp3 背景音乐（客户端）。
@@ -32,9 +32,7 @@ public class ChasmMusic {
     private static long lastPlayEndedAt;
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END)
-            return;
+    public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
 
         // 每 tick 维护当前播放器
@@ -132,6 +130,6 @@ public class ChasmMusic {
 
     private static float currentVolume(Minecraft mc) {
         float music = mc.options.getSoundSourceVolume(SoundSource.MUSIC);
-        return (float) ChasmConfig.MUSIC_VOLUME.get() * music;
+        return (float) (ChasmConfig.MUSIC_VOLUME.get() * music);
     }
 }

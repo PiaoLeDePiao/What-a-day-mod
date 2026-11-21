@@ -2,7 +2,6 @@ package dev.chasm.chasm.glue;
 
 import dev.chasm.chasm.Chasm;
 import dev.chasm.chasm.ChasmConfig;
-import java.util.UUID;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +15,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import net.neoforged.neoforge.event.tick.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * FR-2：强力胶强化。
@@ -28,7 +27,7 @@ import net.neoforged.neoforge.event.tick.TickEvent;
 public class GlueHandler {
 
     public static final ResourceLocation SUPER_GLUE_ID = ResourceLocation.fromNamespaceAndPath("create", "super_glue");
-    private static final UUID REACH_UUID = UUID.fromString("0c0a5e0d-0000-4000-8000-000000000010");
+    private static final ResourceLocation REACH_ID = ResourceLocation.fromNamespaceAndPath("chasm", "glue_reach");
 
     /** 在 mod 总线上调用（见 Chasm 主类）。 */
     public static void modifyDefaultComponents(ModifyDefaultComponentsEvent event) {
@@ -41,12 +40,10 @@ public class GlueHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END)
-            return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
         if (!ChasmConfig.ENABLE_GLUE.get())
             return;
-        Player player = event.player;
+        Player player = event.getEntity();
         if (player.level().isClientSide())
             return;
 
@@ -55,14 +52,14 @@ public class GlueHandler {
         if (reach == null)
             return;
 
-        AttributeModifier existing = reach.getModifier(REACH_UUID);
+        AttributeModifier existing = reach.getModifier(REACH_ID);
         if (holdsGlue) {
             if (existing == null) {
-                reach.addTransientModifier(new AttributeModifier(REACH_UUID, "chasm:glue_reach",
+                reach.addTransientModifier(new AttributeModifier(REACH_ID,
                     ChasmConfig.GLUE_REACH_BONUS.get(), AttributeModifier.Operation.ADD_VALUE));
             }
         } else if (existing != null) {
-            reach.removeModifier(REACH_UUID);
+            reach.removeModifier(REACH_ID);
         }
     }
 

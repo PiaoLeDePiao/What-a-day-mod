@@ -29,6 +29,7 @@ runs {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    implementation "javazoom:jlayer:1.0.1"
     // mp3 解码（JLayer），jarJar 打进模组 jar
     jarJar("javazoom:jlayer:1.0.1") {
         version {

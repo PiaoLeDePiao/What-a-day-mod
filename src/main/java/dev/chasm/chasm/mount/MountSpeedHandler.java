@@ -3,7 +3,7 @@ package dev.chasm.chasm.mount;
 import dev.chasm.chasm.Chasm;
 import dev.chasm.chasm.ChasmConfig;
 import java.util.Map;
-import java.util.UUID;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -17,17 +17,17 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 @EventBusSubscriber(modid = Chasm.MODID)
 public class MountSpeedHandler {
 
-    private static final Map<EntityType<?>, UUID> UUIDS = Map.of(
-        EntityType.HORSE, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000001"),
-        EntityType.DONKEY, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000002"),
-        EntityType.MULE, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000003"),
-        EntityType.CAMEL, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000004"),
-        EntityType.LLAMA, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000005"),
-        EntityType.TRADER_LLAMA, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000006"),
-        EntityType.PIG, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000007"),
-        EntityType.STRIDER, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000008"),
-        EntityType.SKELETON_HORSE, UUID.fromString("0c0a5e0d-0000-4000-8000-000000000009"),
-        EntityType.ZOMBIE_HORSE, UUID.fromString("0c0a5e0d-0000-4000-8000-00000000000a")
+    private static final Map<EntityType<?>, ResourceLocation> MODIFIER_IDS = Map.of(
+        EntityType.HORSE, ResourceLocation.fromNamespaceAndPath("chasm", "mount_horse"),
+        EntityType.DONKEY, ResourceLocation.fromNamespaceAndPath("chasm", "mount_donkey"),
+        EntityType.MULE, ResourceLocation.fromNamespaceAndPath("chasm", "mount_mule"),
+        EntityType.CAMEL, ResourceLocation.fromNamespaceAndPath("chasm", "mount_camel"),
+        EntityType.LLAMA, ResourceLocation.fromNamespaceAndPath("chasm", "mount_llama"),
+        EntityType.TRADER_LLAMA, ResourceLocation.fromNamespaceAndPath("chasm", "mount_trader_llama"),
+        EntityType.PIG, ResourceLocation.fromNamespaceAndPath("chasm", "mount_pig"),
+        EntityType.STRIDER, ResourceLocation.fromNamespaceAndPath("chasm", "mount_strider"),
+        EntityType.SKELETON_HORSE, ResourceLocation.fromNamespaceAndPath("chasm", "mount_skeleton_horse"),
+        EntityType.ZOMBIE_HORSE, ResourceLocation.fromNamespaceAndPath("chasm", "mount_zombie_horse")
     );
 
     @SubscribeEvent
@@ -40,8 +40,8 @@ public class MountSpeedHandler {
             return;
 
         EntityType<?> type = living.getType();
-        UUID uuid = UUIDS.get(type);
-        if (uuid == null)
+        ResourceLocation id = MODIFIER_IDS.get(type);
+        if (id == null)
             return;
 
         double multiplier = multiplierFor(type);
@@ -52,8 +52,8 @@ public class MountSpeedHandler {
         if (speed == null)
             return;
         // amount = 倍率 - 1（add_multiplied_total 会把总值乘上 1+amount）
-        speed.addPermanentModifier(new AttributeModifier(uuid, "chasm:mount_speed",
-            multiplier - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        speed.addPermanentModifier(new AttributeModifier(id, multiplier - 1.0,
+            AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     private static double multiplierFor(EntityType<?> type) {

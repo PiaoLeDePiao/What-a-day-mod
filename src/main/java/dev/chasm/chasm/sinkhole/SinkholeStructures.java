@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlacementSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 /**
@@ -130,7 +130,7 @@ public final class SinkholeStructures {
                 continue; // 模板缺失/版本变动：静默跳过
 
             BlockPos pos = new BlockPos(centerX + p.dx(), params.bottomY(), centerZ + p.dz());
-            StructurePlacementSettings settings = new StructurePlacementSettings()
+            StructurePlaceSettings settings = new StructurePlaceSettings()
                 .setRotation(p.rotation())
                 .setMirror(Mirror.NONE);
             template.placeInWorld(level, pos, pos, settings, server.getRandom(), Block.UPDATE_CLIENTS);
@@ -144,7 +144,7 @@ public final class SinkholeStructures {
     }
 
     /** 模板包围盒内把空气列填水（水下遗迹观感），水面留到距崖顶约 2 格。 */
-    private static void flood(WorldGenLevel level, StructurePlacementSettings settings, StructureTemplate template,
+    private static void flood(WorldGenLevel level, StructurePlaceSettings settings, StructureTemplate template,
                               BlockPos pos, SinkholeParams params) {
         BoundingBox bb = settings.getBoundingBox(pos, template.getSize());
         int surface = params.bottomY() + params.depth();

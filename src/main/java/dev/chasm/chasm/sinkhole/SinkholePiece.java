@@ -13,7 +13,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeCategory;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -89,7 +88,7 @@ public class SinkholePiece extends StructurePiece {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(StructurePieceSerializationContext ctx, CompoundTag tag) {
         centerX = tag.getInt("CX");
         centerZ = tag.getInt("CZ");
         startChunkX = centerX >> 4;
@@ -235,7 +234,7 @@ public class SinkholePiece extends StructurePiece {
         Holder<Biome> holder = level.getBiome(pos.set(x, surfaceY, z));
         Biome biome = holder.value();
         boolean badlands = holder.is(BiomeTags.IS_BADLANDS);
-        boolean desert = biome.getBiomeCategory() == BiomeCategory.DESERT;
+        boolean desert = biome.is(BiomeTags.HAS_DESERT_PYRAMID);
         boolean snowy = biome.coldEnoughToSnow(pos);
 
         for (int y = wallBottom; y <= surfaceY; y++) {
@@ -277,7 +276,7 @@ public class SinkholePiece extends StructurePiece {
     private void decorate(WorldGenLevel level, ChunkAccess chunk, BlockPos.MutableBlockPos pos,
                           int x, int z, int surfaceY, int bottom, double scaled) {
         boolean ocean = level.getBiome(pos.set(x, surfaceY, z)).is(BiomeTags.IS_OCEAN);
-        boolean desert = level.getBiome(pos).value().getBiomeCategory() == BiomeCategory.DESERT;
+        boolean desert = level.getBiome(pos).is(BiomeTags.HAS_DESERT_PYRAMID);
         boolean jungle = level.getBiome(pos).is(BiomeTags.IS_JUNGLE);
 
         // 水瀑：崖带列概率变成水柱倾泻而下
@@ -372,7 +371,7 @@ public class SinkholePiece extends StructurePiece {
         }
 
         boolean ocean = holder.is(BiomeTags.IS_OCEAN);
-        boolean desert = biome.getBiomeCategory() == BiomeCategory.DESERT;
+        boolean desert = biome.is(BiomeTags.HAS_DESERT_PYRAMID);
         boolean jungle = holder.is(BiomeTags.IS_JUNGLE);
         boolean snowy = biome.coldEnoughToSnow(pos.set(x, bottom, z));
 
@@ -397,7 +396,7 @@ public class SinkholePiece extends StructurePiece {
             chunk.setBlockState(pos.set(x, bottom, z), Blocks.MOSS_BLOCK.defaultBlockState(), false);
             double r = hash3(x, 2, z);
             if (r < 0.12) {
-                chunk.setBlockState(pos.set(x, bottom + 1, z), Blocks.GRASS.defaultBlockState(), false);
+                chunk.setBlockState(pos.set(x, bottom + 1, z), Blocks.GRASS_BLOCK.defaultBlockState(), false);
             } else if (r < 0.20) {
                 chunk.setBlockState(pos.set(x, bottom + 1, z), Blocks.GLOW_LICHEN.defaultBlockState(), false);
             }
@@ -413,7 +412,7 @@ public class SinkholePiece extends StructurePiece {
                 hash3(x, 1, z) < 0.15 ? Blocks.MOSS_BLOCK.defaultBlockState() : Blocks.GRASS_BLOCK.defaultBlockState(), false);
             if (hash3(x, 2, z) < 0.06) {
                 chunk.setBlockState(pos.set(x, bottom + 1, z),
-                    hash3(x, 3, z) < 0.5 ? Blocks.GRASS.defaultBlockState() : Blocks.FERN.defaultBlockState(), false);
+                    hash3(x, 3, z) < 0.5 ? Blocks.GRASS_BLOCK.defaultBlockState() : Blocks.FERN.defaultBlockState(), false);
             }
         }
     }

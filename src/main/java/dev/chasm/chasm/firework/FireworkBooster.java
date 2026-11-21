@@ -3,7 +3,6 @@ package dev.chasm.chasm.firework;
 import dev.chasm.chasm.Chasm;
 import dev.chasm.chasm.ChasmConfig;
 import dev.chasm.chasm.ChasmDataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
@@ -15,7 +14,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * 烟花强化逻辑（仅服务端）：
@@ -41,7 +40,7 @@ public final class FireworkBooster {
 
         int boost = stack.getOrDefault(ChasmDataComponents.BOOST_LEVEL.get(), (byte) 0);
         boolean endless = ChasmConfig.FIREWORKS_ENDLESS_ENABLED.get()
-                && BuiltInRegistries.ENCHANTMENT.getHolder(ENDLESS_ENCHANTMENT_KEY)
+                && player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolder(ENDLESS_ENCHANTMENT_KEY)
                         .map(holder -> EnchantmentHelper.getItemEnchantmentLevel(holder, stack) > 0)
                         .orElse(false);
 
@@ -58,9 +57,8 @@ public final class FireworkBooster {
     }
 
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (!(event.player instanceof ServerPlayer player)) return;
+    public static void onPlayerTick(PlayerTickEvent.Post event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!ChasmConfig.FIREWORKS_ENDLESS_ENABLED.get()) return;
         if (!player.getPersistentData().getBoolean(ENDLESS_KEY)) return;
 
