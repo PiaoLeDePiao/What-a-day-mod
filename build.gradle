@@ -1,0 +1,49 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
+}
+
+version = mod_version
+group = mod_group
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+runs {
+    client {
+        client()
+        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+    }
+    server {
+        server()
+        programArgument '--nogui'
+        systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+    }
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+    // mp3 解码（JLayer），jarJar 打进模组 jar
+    jarJar("javazoom:jlayer:1.0.1") {
+        version {
+            strictly '[1.0.1]'
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(ProcessResources).configureEach {
+    inputs.property 'version', project.version
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand version: project.version
+    }
+}

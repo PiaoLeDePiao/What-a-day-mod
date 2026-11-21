@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "dev.chasm.chasm.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "chasm.refmap.json",
+  "mixins": [
+    "FireworkRocketItemMixin"
+  ],
+  "client": [],
+  "server": []
+}

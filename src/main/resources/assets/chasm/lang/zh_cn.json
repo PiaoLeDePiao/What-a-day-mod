@@ -1,0 +1,13 @@
+{
+  "effect.chasm.flight": "飞行",
+  "item.minecraft.potion.effect.chasm_flight": "飞行药水",
+  "item.minecraft.potion.effect.chasm_flight_long": "飞行药水（延长版）",
+  "item.minecraft.splash_potion.effect.chasm_flight": "喷溅型飞行药水",
+  "item.minecraft.splash_potion.effect.chasm_flight_long": "喷溅型飞行药水（延长版）",
+  "item.minecraft.lingering_potion.effect.chasm_flight": "滞留型飞行药水",
+  "item.minecraft.lingering_potion.effect.chasm_flight_long": "滞留型飞行药水（延长版）",
+  "item.minecraft.tipped_arrow.effect.chasm_flight": "飞行之箭",
+  "item.minecraft.tipped_arrow.effect.chasm_flight_long": "飞行之箭（延长版）",
+  "enchantment.chasm.endless_boost": "无限推进",
+  "enchantment.chasm.endless_boost.desc": "使用后持续为鞘翅提供加速，直到落地"
+}

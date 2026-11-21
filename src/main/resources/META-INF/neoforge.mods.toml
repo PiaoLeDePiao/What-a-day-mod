@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="All rights reserved"
+issueTrackerURL=""
+
+[[mods]]
+modId="chasm"
+version="${version}"
+displayName="天坑奇观 Chasm"
+description="坐骑提速、无限强力胶、飞行药水、天坑结构、本地背景音乐。全部功能可在 config/chasm.toml 中调整。"
+authors=["whataday"]
+displayURL=""
+
+[[dependencies.chasm]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.252,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.chasm]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.chasm]]
+modId="create"
+type="required"
+versionRange="[6.0,7)"
+ordering="AFTER"
+side="BOTH"
+
+[[mixins]]
+config="chasm.mixins.json"

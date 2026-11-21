@@ -1,0 +1,13 @@
+{
+  "effect.chasm.flight": "Flight",
+  "item.minecraft.potion.effect.chasm_flight": "Potion of Flight",
+  "item.minecraft.potion.effect.chasm_flight_long": "Potion of Flight (Extended)",
+  "item.minecraft.splash_potion.effect.chasm_flight": "Splash Potion of Flight",
+  "item.minecraft.splash_potion.effect.chasm_flight_long": "Splash Potion of Flight (Extended)",
+  "item.minecraft.lingering_potion.effect.chasm_flight": "Lingering Potion of Flight",
+  "item.minecraft.lingering_potion.effect.chasm_flight_long": "Lingering Potion of Flight (Extended)",
+  "item.minecraft.tipped_arrow.effect.chasm_flight": "Arrow of Flight",
+  "item.minecraft.tipped_arrow.effect.chasm_flight_long": "Arrow of Flight (Extended)",
+  "enchantment.chasm.endless_boost": "Endless Boost",
+  "enchantment.chasm.endless_boost.desc": "Keeps boosting elytra flight until you land"
+}
