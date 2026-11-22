@@ -10,7 +10,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -31,12 +31,11 @@ public class ChasmPotions {
         POTIONS.register("chasm_flight_long", () -> new Potion(new MobEffectInstance(FLIGHT_EFFECT, ChasmConfig.FLIGHT_LONG_DURATION_TICKS.get())));
 
     /** 缓降药水 + 幻翼膜 → 飞行药水；飞行药水 + 红石 → 延长版。 */
-    public static void onCommonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            if (!ChasmConfig.ENABLE_POTION.get())
-                return;
-            PotionBrewing.addMix(Potions.SLOW_FALLING, Items.PHANTOM_MEMBRANE, FLIGHT.getDelegate());
-            PotionBrewing.addMix(FLIGHT.getDelegate(), Items.REDSTONE, FLIGHT_LONG.getDelegate());
-        });
+    public static void onRegisterBrewing(RegisterBrewingRecipesEvent event) {
+        if (!ChasmConfig.ENABLE_POTION.get())
+            return;
+        PotionBrewing.Builder builder = event.getBuilder();
+        builder.addMix(Potions.SLOW_FALLING, Items.PHANTOM_MEMBRANE, FLIGHT.getDelegate());
+        builder.addMix(FLIGHT.getDelegate(), Items.REDSTONE, FLIGHT_LONG.getDelegate());
     }
 }

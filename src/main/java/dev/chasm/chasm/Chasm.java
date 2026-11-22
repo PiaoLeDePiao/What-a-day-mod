@@ -22,7 +22,7 @@ public class Chasm {
         // 飞行药水：效果、药水、酿造配方
         ChasmPotions.MOB_EFFECTS.register(modBus);
         ChasmPotions.POTIONS.register(modBus);
-        modBus.addListener(ChasmPotions::onCommonSetup);
+        NeoForge.EVENT_BUS.addListener(ChasmPotions::onRegisterBrewing);
         // 天坑结构
         ChasmStructures.STRUCTURE_TYPES.register(modBus);
         ChasmStructures.PIECE_TYPES.register(modBus);
