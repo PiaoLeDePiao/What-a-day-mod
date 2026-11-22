@@ -114,8 +114,8 @@ public final class SinkholeStructures {
         if (plan.isEmpty())
             return;
         ServerLevel server = level.getLevel();
-        boolean ocean = level.getBiome(new BlockPos(centerX, params.bottomY() + 1, centerZ))
-            .is(BiomeTags.IS_OCEAN);
+        boolean ocean = level.getBiome(new BlockPos(centerX, params.bottomY() + 1, centerZ)).tags()
+            .anyMatch(t -> t == BiomeTags.IS_OCEAN);
 
         for (Planned p : plan) {
             // 村庄只放陆地、水下遗迹只放海洋
@@ -146,7 +146,7 @@ public final class SinkholeStructures {
     /** 模板包围盒内把空气列填水（水下遗迹观感），水面留到距崖顶约 2 格。 */
     private static void flood(WorldGenLevel level, StructurePlaceSettings settings, StructureTemplate template,
                               BlockPos pos, SinkholeParams params) {
-        BoundingBox bb = settings.getBoundingBox(pos, template.getSize());
+        BoundingBox bb = settings.getBoundingBox().moved(pos.getX(), pos.getY(), pos.getZ());
         int surface = params.bottomY() + params.depth();
         int top = Math.min(bb.maxY() + 1, surface - 2);
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();

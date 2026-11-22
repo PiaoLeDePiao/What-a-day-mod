@@ -6,6 +6,7 @@ import dev.chasm.chasm.ChasmConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 /**
@@ -60,7 +60,16 @@ public class SinkholePiece extends StructurePiece {
 
     public SinkholePiece(StructurePieceSerializationContext ctx, CompoundTag tag) {
         super(ChasmStructures.SINKHOLE_PIECE.get(), tag);
-        // 字段由 readAdditionalSaveData 读取（在 super 构造中回调）
+        centerX = tag.getInt("CX");
+        centerZ = tag.getInt("CZ");
+        startChunkX = centerX >> 4;
+        startChunkZ = centerZ >> 4;
+        params = new SinkholeParams(tag.getInt("Mode"), tag.getInt("Feature"),
+            tag.getDouble("FBlend"), tag.getDouble("Spindle"), tag.getDouble("Aspect"),
+            tag.getInt("RX"), tag.getInt("RZ"), tag.getDouble("RCos"), tag.getDouble("RSin"),
+            tag.getInt("Depth"), tag.getInt("BottomY"), tag.getLong("Seed"));
+        shapeField = new ShapeField(params);
+        structuresDone = tag.getBoolean("StructuresDone");
     }
 
     private static BoundingBox boundingBoxFor(int centerX, int centerZ, SinkholeParams p) {
@@ -87,19 +96,6 @@ public class SinkholePiece extends StructurePiece {
         tag.putBoolean("StructuresDone", structuresDone);
     }
 
-    @Override
-    public void readAdditionalSaveData(StructurePieceSerializationContext ctx, CompoundTag tag) {
-        centerX = tag.getInt("CX");
-        centerZ = tag.getInt("CZ");
-        startChunkX = centerX >> 4;
-        startChunkZ = centerZ >> 4;
-        params = new SinkholeParams(tag.getInt("Mode"), tag.getInt("Feature"),
-            tag.getDouble("FBlend"), tag.getDouble("Spindle"), tag.getDouble("Aspect"),
-            tag.getInt("RX"), tag.getInt("RZ"), tag.getDouble("RCos"), tag.getDouble("RSin"),
-            tag.getInt("Depth"), tag.getInt("BottomY"), tag.getLong("Seed"));
-        shapeField = new ShapeField(params);
-        structuresDone = tag.getBoolean("StructuresDone");
-    }
 
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator,
@@ -233,8 +229,8 @@ public class SinkholePiece extends StructurePiece {
         int wallBottom = params.bottomY() + (int) ((surfaceY - params.bottomY()) * 0.65);
         Holder<Biome> holder = level.getBiome(pos.set(x, surfaceY, z));
         Biome biome = holder.value();
-        boolean badlands = holder.is(BiomeTags.IS_BADLANDS);
-        boolean desert = biome.is(BiomeTags.HAS_DESERT_PYRAMID);
+        boolean badlands = holder.tags().anyMatch(t -> t == BiomeTags.IS_BADLANDS);
+        boolean desert = holder.tags().anyMatch(t -> t == BiomeTags.HAS_DESERT_PYRAMID);
         boolean snowy = biome.coldEnoughToSnow(pos);
 
         for (int y = wallBottom; y <= surfaceY; y++) {
@@ -275,9 +271,10 @@ public class SinkholePiece extends StructurePiece {
 
     private void decorate(WorldGenLevel level, ChunkAccess chunk, BlockPos.MutableBlockPos pos,
                           int x, int z, int surfaceY, int bottom, double scaled) {
-        boolean ocean = level.getBiome(pos.set(x, surfaceY, z)).is(BiomeTags.IS_OCEAN);
-        boolean desert = level.getBiome(pos).is(BiomeTags.HAS_DESERT_PYRAMID);
-        boolean jungle = level.getBiome(pos).is(BiomeTags.IS_JUNGLE);
+        Holder<Biome> hb = level.getBiome(pos.set(x, surfaceY, z));
+        boolean ocean = hb.tags().anyMatch(t -> t == BiomeTags.IS_OCEAN);
+        boolean desert = hb.tags().anyMatch(t -> t == BiomeTags.HAS_DESERT_PYRAMID);
+        boolean jungle = hb.tags().anyMatch(t -> t == BiomeTags.IS_JUNGLE);
 
         // 水瀑：崖带列概率变成水柱倾泻而下
         if (scaled > 0.80 && ChasmConfig.SINKHOLE_WATERFALL_CHANCE.get() > 0) {
@@ -370,9 +367,9 @@ public class SinkholePiece extends StructurePiece {
             return;
         }
 
-        boolean ocean = holder.is(BiomeTags.IS_OCEAN);
-        boolean desert = biome.is(BiomeTags.HAS_DESERT_PYRAMID);
-        boolean jungle = holder.is(BiomeTags.IS_JUNGLE);
+        boolean ocean = holder.tags().anyMatch(t -> t == BiomeTags.IS_OCEAN);
+        boolean desert = holder.tags().anyMatch(t -> t == BiomeTags.HAS_DESERT_PYRAMID);
+        boolean jungle = holder.tags().anyMatch(t -> t == BiomeTags.IS_JUNGLE);
         boolean snowy = biome.coldEnoughToSnow(pos.set(x, bottom, z));
 
         if (ocean) {

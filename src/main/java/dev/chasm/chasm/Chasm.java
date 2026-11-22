@@ -7,6 +7,7 @@ import dev.chasm.chasm.potion.ChasmPotions;
 import dev.chasm.chasm.recipe.ChasmRecipes;
 import dev.chasm.chasm.sinkhole.ChasmStructures;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -14,8 +15,8 @@ import net.neoforged.neoforge.common.NeoForge;
 public class Chasm {
     public static final String MODID = "chasm";
 
-    public Chasm(IEventBus modBus) {
-        ChasmConfig.init();
+    public Chasm(IEventBus modBus, ModContainer container) {
+        ChasmConfig.init(container);
         // 强力胶：修改 Create 物品的默认组件（耐久）
         modBus.addListener(GlueHandler::modifyDefaultComponents);
         // 飞行药水：效果、药水、酿造配方

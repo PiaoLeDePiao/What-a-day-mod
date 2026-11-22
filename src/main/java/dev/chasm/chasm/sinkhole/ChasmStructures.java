@@ -33,9 +33,6 @@ public class ChasmStructures {
 
     public static final DeferredHolder<StructureType<?>, StructureType<SinkholeStructure>> SINKHOLE_TYPE =
         STRUCTURE_TYPES.register("sinkhole", () -> new StructureType<>() {
-            public String getSerializedName() {
-                return "chasm:sinkhole";
-            }
 
             @Override
             public MapCodec<SinkholeStructure> codec() {

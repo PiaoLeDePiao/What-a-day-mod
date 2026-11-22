@@ -1,6 +1,6 @@
 package dev.chasm.chasm;
 
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 
@@ -203,7 +203,7 @@ public class ChasmConfig {
         return b.build();
     }
 
-    public static void init() {
-        ModLoadingContext.get().registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, SPEC);
+    public static void init(net.neoforged.fml.ModContainer container) {
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, SPEC);
     }
 }

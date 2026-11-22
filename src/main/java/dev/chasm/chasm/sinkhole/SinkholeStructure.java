@@ -86,7 +86,7 @@ public class SinkholeStructure extends Structure {
                 int quartZ = (center.z + oz) * 4;
                 Holder<Biome> biome = ctx.chunkGenerator().getBiomeSource()
                     .getNoiseBiome(quartX, 16, quartZ, ctx.randomState().sampler());
-                if (biome.is(BiomeTags.IS_OCEAN))
+                if (biome.tags().anyMatch(t -> t == BiomeTags.IS_OCEAN))
                     count++;
             }
         }
