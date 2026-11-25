@@ -170,7 +170,6 @@ public class ChasmConfig {
         SINKHOLE_STRUCTURES_ANCIENT_CITY_MIN_DEPTH = b.comment("生成远古城市所需的最小坑深（格）").defineInRange("ancient_city_min_depth", 40, 10, 200);
         SINKHOLE_STRUCTURES_UNDERWATER_CHANCE = b.comment("海洋天坑底部生成水下遗迹的概率").defineInRange("underwater_ruin_chance", 0.30, 0.0, 1.0);
         b.pop();
-        b.pop();
 
         b.push("music");
         b.comment("背景音乐：把 mp3 放进 config/chasm/music/ 文件夹即可（随机插入式，与 NetMusic 共存）。");
