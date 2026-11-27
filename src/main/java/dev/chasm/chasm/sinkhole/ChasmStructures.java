@@ -2,7 +2,6 @@ package dev.chasm.chasm.sinkhole;
 
 import com.mojang.serialization.MapCodec;
 import dev.chasm.chasm.Chasm;
-import dev.chasm.chasm.ChasmConfig;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.HolderSet;
@@ -52,8 +51,8 @@ public class ChasmStructures {
         STRUCTURE_SETS.register("sinkhole", () -> new StructureSet(
             List.of(new StructureSet.StructureSelectionEntry(SINKHOLE, 1)),
             new RandomSpreadStructurePlacement(
-                ChasmConfig.SINKHOLE_SPACING.get(),
-                ChasmConfig.SINKHOLE_SEPARATION.get(),
+                8,
+                5,
                 RandomSpreadType.LINEAR, 1526052012)));
 
     private static HolderSet<Biome> allOverworldBiomes() {

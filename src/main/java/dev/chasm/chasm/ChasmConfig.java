@@ -26,13 +26,10 @@ public class ChasmConfig {
     public static ModConfigSpec.IntValue GLUE_REACH_BONUS;
 
     public static ModConfigSpec.BooleanValue ENABLE_POTION;
-    public static ModConfigSpec.IntValue FLIGHT_DURATION_TICKS;
-    public static ModConfigSpec.IntValue FLIGHT_LONG_DURATION_TICKS;
 
     public static ModConfigSpec.BooleanValue ENABLE_SINKHOLE;
-    public static ModConfigSpec.IntValue SINKHOLE_SPACING;
-    public static ModConfigSpec.IntValue SINKHOLE_SEPARATION;
     public static ModConfigSpec.IntValue SINKHOLE_MIN_CHUNKS;
+    public static ModConfigSpec.DoubleValue SINKHOLE_FREQUENCY;
     public static ModConfigSpec.IntValue SINKHOLE_MAX_CHUNKS;
     public static ModConfigSpec.DoubleValue SINKHOLE_SIZE_EXPONENT;
     public static ModConfigSpec.IntValue SINKHOLE_HUGE_THRESHOLD;
@@ -121,16 +118,13 @@ public class ChasmConfig {
         b.push("potion");
         b.comment("飞行药水。");
         ENABLE_POTION = b.comment("总开关").define("enable", true);
-        FLIGHT_DURATION_TICKS = b.comment("飞行药水基础时长（刻，默认 36000 = 30 分钟）").defineInRange("flight_duration_ticks", 36000, 1, Integer.MAX_VALUE);
-        FLIGHT_LONG_DURATION_TICKS = b.comment("红石延长版时长（刻，默认 144000 = 2 小时）").defineInRange("long_duration_ticks", 144000, 1, Integer.MAX_VALUE);
         b.pop();
 
         b.push("sinkhole");
-        b.comment("天坑结构生成。频率与远古城市同级或更低：spacing 越大越稀疏。改配置只影响之后探索的新区域。");
+        b.comment("天坑结构生成。频率由 frequency 接受概率控制，默认 0.35 与远古城市同级。改配置只影响之后探索的新区域。");
         ENABLE_SINKHOLE = b.comment("总开关").define("enable", true);
-        SINKHOLE_SPACING = b.comment("结构网格间距（区块），默认 8").defineInRange("spacing", 8, 3, 64);
-        SINKHOLE_SEPARATION = b.comment("同一网格内两个天坑的最小间距（区块），默认 5").defineInRange("separation", 5, 0, 32);
         SINKHOLE_MIN_CHUNKS = b.comment("天坑最短轴下限（区块），默认 6").defineInRange("min_chunks", 6, 3, 256);
+        SINKHOLE_FREQUENCY = b.comment("天坑生成接受概率（0~1，越低越稀有；默认 0.35 与远古城市同级，0.1 更稀有）").defineInRange("frequency", 0.35, 0.0, 1.0);
         SINKHOLE_MAX_CHUNKS = b.comment("天坑最长轴常规上限（区块），默认 24").defineInRange("max_chunks", 24, 6, 1024);
         SINKHOLE_SIZE_EXPONENT = b.comment("尺寸分布指数（越大越偏向小坑；3.0 时绝大多数接近下限，偶有巨坑）").defineInRange("size_exponent", 3.0, 0.5, 10.0);
         SINKHOLE_HUGE_THRESHOLD = b.comment("超过该轴长（区块）视为特大坑").defineInRange("huge_threshold", 16, 6, 1024);

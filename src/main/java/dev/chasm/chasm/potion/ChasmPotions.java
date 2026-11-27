@@ -24,11 +24,13 @@ public class ChasmPotions {
 
     public static final DeferredHolder<MobEffect, FlightEffect> FLIGHT_EFFECT =
         MOB_EFFECTS.register("flight", FlightEffect::new);
+    public static final int FLIGHT_TICKS = 36000;
+    public static final int FLIGHT_LONG_TICKS = 144000;
 
     public static final DeferredHolder<Potion, Potion> FLIGHT =
-        POTIONS.register("chasm_flight", () -> new Potion(new MobEffectInstance(FLIGHT_EFFECT, ChasmConfig.FLIGHT_DURATION_TICKS.get())));
+        POTIONS.register("chasm_flight", () -> new Potion(new MobEffectInstance(FLIGHT_EFFECT, FLIGHT_TICKS)));
     public static final DeferredHolder<Potion, Potion> FLIGHT_LONG =
-        POTIONS.register("chasm_flight_long", () -> new Potion(new MobEffectInstance(FLIGHT_EFFECT, ChasmConfig.FLIGHT_LONG_DURATION_TICKS.get())));
+        POTIONS.register("chasm_flight_long", () -> new Potion(new MobEffectInstance(FLIGHT_EFFECT, FLIGHT_LONG_TICKS)));
 
     /** 缓降药水 + 幻翼膜 → 飞行药水；飞行药水 + 红石 → 延长版。 */
     public static void onRegisterBrewing(RegisterBrewingRecipesEvent event) {

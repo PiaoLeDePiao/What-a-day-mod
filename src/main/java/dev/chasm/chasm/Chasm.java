@@ -2,7 +2,6 @@ package dev.chasm.chasm;
 
 import dev.chasm.chasm.firework.FireworkBooster;
 import dev.chasm.chasm.harvest.HarvestHandler;
-import dev.chasm.chasm.glue.GlueHandler;
 import dev.chasm.chasm.potion.ChasmPotions;
 import dev.chasm.chasm.recipe.ChasmRecipes;
 import dev.chasm.chasm.sinkhole.ChasmStructures;
@@ -18,7 +17,7 @@ public class Chasm {
     public Chasm(IEventBus modBus, ModContainer container) {
         ChasmConfig.init(container);
         // 强力胶：修改 Create 物品的默认组件（耐久）
-        modBus.addListener(GlueHandler::modifyDefaultComponents);
+        modBus.addListener(ChasmDefaults::modifyDefaultComponents);
         // 飞行药水：效果、药水、酿造配方
         ChasmPotions.MOB_EFFECTS.register(modBus);
         ChasmPotions.POTIONS.register(modBus);

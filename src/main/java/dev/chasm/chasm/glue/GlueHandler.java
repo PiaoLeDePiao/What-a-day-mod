@@ -9,35 +9,22 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
- * FR-2：强力胶强化。
- * 1) 耐久：修改 create:super_glue 的默认 max_damage 组件（ModifyDefaultComponentsEvent）。
- * 2) 距离：Create 6.0.x 的主手/副手胶距离都读取玩家 BLOCK_INTERACTION_RANGE 属性，
- *    因此持有强力胶时给该属性加一个大修饰器即可实现"使用范围无上限"；放下即移除。
+ * FR-2：强力胶强化（运行期，配置已加载后执行）。
+ * 1) 耐久：每刻把背包内强力胶的 max_damage 同步为配置值（只写有变化的，避免每刻网络同步）。
+ * 2) 距离：Create 6.0.x 的胶距离读取玩家 BLOCK_INTERACTION_RANGE 属性，
+ *    持有强力胶时给该属性加大修饰器即"使用范围无上限"，放下即移除。
  */
 @EventBusSubscriber(modid = Chasm.MODID)
 public class GlueHandler {
 
     public static final ResourceLocation SUPER_GLUE_ID = ResourceLocation.fromNamespaceAndPath("create", "super_glue");
     private static final ResourceLocation REACH_ID = ResourceLocation.fromNamespaceAndPath("chasm", "glue_reach");
-
-    /** 在 mod 总线上调用（见 Chasm 主类）。 */
-    public static void modifyDefaultComponents(ModifyDefaultComponentsEvent event) {
-        if (!ChasmConfig.ENABLE_GLUE.get())
-            return;
-        Item glue = BuiltInRegistries.ITEM.get(SUPER_GLUE_ID);
-        if (glue == null || glue == Items.AIR)
-            return; // Create 未安装，静默跳过
-        event.modify(glue, builder -> builder.set(DataComponents.MAX_DAMAGE, ChasmConfig.GLUE_MAX_DAMAGE.get()));
-    }
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
@@ -47,7 +34,18 @@ public class GlueHandler {
         if (player.level().isClientSide())
             return;
 
-        boolean holdsGlue = isGlue(player.getMainHandItem()) || isGlue(player.getOffhandItem());
+        int maxDamage = ChasmConfig.GLUE_MAX_DAMAGE.get();
+        for (ItemStack stack : player.getInventory().items) {
+            if (isGlue(stack) && stack.getOrDefault(DataComponents.MAX_DAMAGE, -1) != maxDamage) {
+                stack.set(DataComponents.MAX_DAMAGE, maxDamage);
+            }
+        }
+        ItemStack offhand = player.getOffhandItem();
+        if (isGlue(offhand) && offhand.getOrDefault(DataComponents.MAX_DAMAGE, -1) != maxDamage) {
+            offhand.set(DataComponents.MAX_DAMAGE, maxDamage);
+        }
+
+        boolean holdsGlue = isGlue(player.getMainHandItem()) || isGlue(offhand);
         AttributeInstance reach = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
         if (reach == null)
             return;

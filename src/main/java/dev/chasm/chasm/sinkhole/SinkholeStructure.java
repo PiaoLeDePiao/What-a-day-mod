@@ -38,6 +38,8 @@ public class SinkholeStructure extends Structure {
     public Optional<GenerationStub> findGenerationPoint(GenerationContext ctx) {
         if (!ChasmConfig.ENABLE_SINKHOLE.get())
             return Optional.empty();
+        if (ctx.random().nextDouble() > ChasmConfig.SINKHOLE_FREQUENCY.get())
+            return Optional.empty();
 
         ChunkPos chosen = pickChunk(ctx, ctx.chunkPos());
         int centerX = chosen.getMiddleBlockX();
